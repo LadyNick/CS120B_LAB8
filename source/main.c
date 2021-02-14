@@ -44,93 +44,84 @@ void PWM_off(){
 	TCCR3B = 0X00;
 }
 
-enum Notes_states{button1, button2, button3, silent, init}Note_state;
+enum Notes_states{init, on, off, change, release}Note_state;
 
 unsigned char A0;
 unsigned char A1;
 unsigned char A2;
+unsigned char count = 0;
 
 void Tick_Note(){
 	switch(Note_state){
-		case init:
-			Note_state = silent;
-			break;
-		case silent:
-			set_PWM(0);
-			if(!A0 && !A1 && !A2){
-				Note_state = silent;
-			}
-			else if( A0 && !A1 && !A2){
-				Note_state = button1;
-			}
-			else if( !A0 && A1 && !A2){
-				Note_state= button2;
-			}
-			else if( !A0 && !A1 && A2 ){
-				Note_state= button3;
-			}
-			else{
-			        Note_state= silent;
-			}	       
-			break;
-		case button1:
+	
+	case init:
+		Note_state = on;
+		break;
+	case off:
+		PWM_off();
+		if(A0){
+			Note_state = on;
+		}
+		else{
+			Note_state = off;
+		break;
+	case on:
+		PWM_on();
+		set_PWM(261.63);
+		count = 1;
+		if(!A0){
+			Note_state = off;
+		}
+		else{
+			Note_state = change;
+		}
+		break;
+	case change:
+		if(count == 1){
 			set_PWM(261.63);
-			if(!A0 && !A1 && !A2){
-				Note_state= silent;
-			}
-			else if( A0 && !A1 && !A2){
-				Note_state= button1;
-			}
-			else if( !A0 && A1 && !A2){
-				Note_state= button2;
-			}
-			else if( !A0 && !A1 && A2 ){
-				Note_state= button3;
-			}
-			else{
-			        Note_state= silent;
-			}
-			break;
-		case button2:
+		}
+		if(count == 2){
 			set_PWM(293.66);
-			if(!A0 && !A1 && !A2){
-				Note_state= silent;
-			}
-			else if( A0 && !A1 && !A2){
-				Note_state= button1;
-			}
-			else if( !A0 && A1 && !A2){
-				Note_state= button2;
-			}
-			else if( !A0 && !A1 && A2 ){
-				Note_state= button3;
-			}
-			else{
-			        Note_state= silent;
-			}
-			break;
-		case button3:
+		}
+		if(count == 3){
 			set_PWM(329.63);
-			if(!A0 && !A1 && !A2){
-				Note_state= silent;
+		}
+		if(count == 4){
+			set_PWM(349.23);
+		}
+		if(count == 5){
+			set_PWM(392.00);
+		}
+		if(count == 6){
+			set_PWM(440.00);
+		}
+		if(count == 7){
+			set_PWM(493.88);
+		}
+		if(count == 8){
+			set_PWM(523.25);
+		}
+		if(A1){
+			++count;
+			if(count > 8){
+				count = 8;
 			}
-			else if( A0 && !A1 && !A2){
-				Note_state= button1;
+			Note_state = change;
+		}
+		else if(A2){
+			--count;
+			if(count < 1){
+				count = 1;
 			}
-			else if( !A0 && A1 && !A2){
-				Note_state= button2;
-			}
-			else if( !A0 && !A1 && A2 ){
-				Note_state= button3;
-			}
-			else{
-			        Note_state= silent;
-			}
-			break;
-		default:
-			Note_state = silent;
-			break;
+			Note_state = change;
+		}
+		break;
+	case default:
+		Note_state = init;
+		break;
+
 	}
+
 }
 
 int main(void) {
@@ -143,9 +134,9 @@ int main(void) {
 	Note_state = init;
 	
       while (1) {
-	A0 = (~PINA & 0x01);
-	A1 = (~PINA & 0x02) >> 1;
-	A2 = (~PINA & 0x04) >> 2;
+	A0 = (~PINA & 0x01); //on & off
+	A1 = (~PINA & 0x02) >> 1; //up
+	A2 = (~PINA & 0x04) >> 2; //down
 	Tick_Note();
 
 
