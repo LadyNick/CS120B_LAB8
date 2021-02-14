@@ -101,19 +101,27 @@ void Tick_Note(){
 		if(count == 8){
 			set_PWM(523.25);
 		}
+		if(A0){
+			Note_state = off;
+		}
+		else{
 		if(A1){
 			++count;
 			if(count > 8){
 				count = 8;
 			}
-			Note_state = change;
+			Note_state = release;
 		}
 		else if(A2){
 			--count;
 			if(count < 1){
 				count = 1;
 			}
+			Note_state = release;
+		}
+		else{
 			Note_state = change;
+		}
 		}
 		break;
 	case default:
