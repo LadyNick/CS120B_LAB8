@@ -69,7 +69,7 @@ void Tick_Note(){
 			else if( !A0 && !A1 && A2 ){
 				Note_state= button3;
 			}
-			else if( (A0 + A1 + A2) > 1 ){
+			else{
 			        Note_state= silent;
 			}	       
 			break;
@@ -87,7 +87,7 @@ void Tick_Note(){
 			else if( !A0 && !A1 && A2 ){
 				Note_state= button3;
 			}
-			else if( (A0 + A1 + A2) > 1 ){
+			else{
 			        Note_state= silent;
 			}
 			break;
@@ -105,7 +105,7 @@ void Tick_Note(){
 			else if( !A0 && !A1 && A2 ){
 				Note_state= button3;
 			}
-			else if( (A0 + A1 + A2) > 1 ){
+			else{
 			        Note_state= silent;
 			}
 			break;
@@ -123,7 +123,7 @@ void Tick_Note(){
 			else if( !A0 && !A1 && A2 ){
 				Note_state= button3;
 			}
-			else if( (A0 + A1 + A2) > 1 ){
+			else{
 			        Note_state= silent;
 			}
 			break;
@@ -143,7 +143,7 @@ int main(void) {
 	Note_state = init;
 	
       while (1) {
-	A0 = ~PINA & 0x01;
+	A0 = (~PINA & 0x01);
 	A1 = (~PINA & 0x02) >> 1;
 	A2 = (~PINA & 0x04) >> 2;
 	Tick_Note();
