@@ -12,114 +12,6 @@
 #include "simAVRHeader.h"
 #endif
 
-enum Notes(button1, button2, button3, silent, init)Note;
-
-unsigned char A0;
-unsigned char A1;
-unsigned char A2;
-
-Tick_Note(){
-	switch(Note){
-		case init:
-			Note = silent;
-			break;
-		case silent:
-			PWM_off();
-			if(!A0 && !A1 && !A2){
-				Note = silent;
-			}
-			else if( A0 && !A1 && !A2){
-				Note = button1;
-				PWM_on();
-			}
-			else if( !A0 && A1 && !A2){
-				Note = button2;
-				PWM_on();
-			}
-			else if( !A0 && !A1 && A2 ){
-				Note = button3;
-				PWM_on();
-			}
-			else if( (A0 + A1 + A2) > 1 ){
-				PWM_off();
-			        Note = silent;
-			}	       
-			break;
-		case button1:
-			set_PWM(261.63);
-			if(!A0 && !A1 && !A2){
-				PWM_off();
-				Note = silent;
-			}
-			else if( A0 && !A1 && !A2){
-				Note = button1;
-				PWM_on();
-			}
-			else if( !A0 && A1 && !A2){
-				Note = button2;
-				PWM_on();
-			}
-			else if( !A0 && !A1 && A2 ){
-				Note = button3;
-				PWM_on();
-			}
-			else if( (A0 + A1 + A2) > 1 ){
-				PWM_off();
-			        Note = silent;
-			}
-			break;
-		case button2:
-			set_PWM(293.66);
-			if(!A0 && !A1 && !A2){
-				PWM_off();
-				Note = silent;
-			}
-			else if( A0 && !A1 && !A2){
-				Note = button1;
-				PWM_on();
-			}
-			else if( !A0 && A1 && !A2){
-				Note = button2;
-				PWM_on();
-			}
-			else if( !A0 && !A1 && A2 ){
-				Note = button3;
-				PWM_on();
-			}
-			else if( (A0 + A1 + A2) > 1 ){
-				PWM_off();
-			        Note = silent;
-			}
-			break;
-		case button3:
-			set_PWM(329.63);
-			if(!A0 && !A1 && !A2){
-				PWM_off();
-				Note = silent;
-			}
-			else if( A0 && !A1 && !A2){
-				Note = button1;
-				PWM_on();
-			}
-			else if( !A0 && A1 && !A2){
-				Note = button2;
-				PWM_on();
-			}
-			else if( !A0 && !A1 && A2 ){
-				Note = button3;
-				PWM_on();
-			}
-			else if( (A0 + A1 + A2) > 1 ){
-				PWM_off();
-			        Note = silent;
-			}
-			break;
-		default:
-			Note = silent;
-			break;
-	}
-}
-
 void set_PWM(double frequency){
 	static double current_frequency;
 
@@ -152,13 +44,121 @@ void PWM_off(){
 	TCCR3B = 0X00;
 }
 
+enum Notes_state(button1, button2, button3, silent, init)Note_state;
+
+unsigned char A0;
+unsigned char A1;
+unsigned char A2;
+
+Tick_Note(){
+	switch(Note_state){
+		case init:
+			Note_state = silent;
+			break;
+		case silent:
+			PWM_off();
+			if(!A0 && !A1 && !A2){
+				Note_state = silent;
+			}
+			else if( A0 && !A1 && !A2){
+				Note_state = button1;
+				PWM_on();
+			}
+			else if( !A0 && A1 && !A2){
+				Note_state= button2;
+				PWM_on();
+			}
+			else if( !A0 && !A1 && A2 ){
+				Note_state= button3;
+				PWM_on();
+			}
+			else if( (A0 + A1 + A2) > 1 ){
+				PWM_off();
+			        Note_state= silent;
+			}	       
+			break;
+		case button1:
+			set_PWM(261.63);
+			if(!A0 && !A1 && !A2){
+				PWM_off();
+				Note_state= silent;
+			}
+			else if( A0 && !A1 && !A2){
+				Note_state= button1;
+				PWM_on();
+			}
+			else if( !A0 && A1 && !A2){
+				Note_state= button2;
+				PWM_on();
+			}
+			else if( !A0 && !A1 && A2 ){
+				Note_state= button3;
+				PWM_on();
+			}
+			else if( (A0 + A1 + A2) > 1 ){
+				PWM_off();
+			        Note_state= silent;
+			}
+			break;
+		case button2:
+			set_PWM(293.66);
+			if(!A0 && !A1 && !A2){
+				PWM_off();
+				Note_state= silent;
+			}
+			else if( A0 && !A1 && !A2){
+				Note_state= button1;
+				PWM_on();
+			}
+			else if( !A0 && A1 && !A2){
+				Note_state= button2;
+				PWM_on();
+			}
+			else if( !A0 && !A1 && A2 ){
+				Note_state= button3;
+				PWM_on();
+			}
+			else if( (A0 + A1 + A2) > 1 ){
+				PWM_off();
+			        Note_state= silent;
+			}
+			break;
+		case button3:
+			set_PWM(329.63);
+			if(!A0 && !A1 && !A2){
+				PWM_off();
+				Note_state= silent;
+			}
+			else if( A0 && !A1 && !A2){
+				Note_state= button1;
+				PWM_on();
+			}
+			else if( !A0 && A1 && !A2){
+				Note_state= button2;
+				PWM_on();
+			}
+			else if( !A0 && !A1 && A2 ){
+				Note_state= button3;
+				PWM_on();
+			}
+			else if( (A0 + A1 + A2) > 1 ){
+				PWM_off();
+			        Note_state= silent;
+			}
+			break;
+		default:
+			Note _state= silent;
+			break;
+	}
+}
+
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0X00; PINA = 0XFF;
 	DDRB = 0X40; PORTB = 0x00;
 	
     /* Insert your solution below */
-	Note = init;
+	Note_state= init;
 	
     while (1) {
 	A0 = ~PINA & 0x01;
