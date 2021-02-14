@@ -12,6 +12,19 @@
 #include "simAVRHeader.h"
 #endif
 
+enum Notes(button1, button2, button3, silent)Note;
+
+unsigned char A0;
+unsigned char A1;
+unsigned char A2;
+
+Tick_Note(){
+	switch(Note){
+		case
+
+	}
+}
+
 void set_PWM(double frequency){
 	static double current_frequency;
 
@@ -46,10 +59,15 @@ void PWM_off(){
 
 int main(void) {
     /* Insert DDR and PORT initializations */
+	DDRA = 0X00; PINA = 0XFF;
+	DDRB = 0X40; PORTB = 0x00;
 
     /* Insert your solution below */
     while (1) {
-
+	A0 = ~PINA & 0x01;
+	A1 = ~PINA & 0x02;
+	A2 = ~PINA & 0x04;
+	Tick_Note();
     }
     return 1;
 }
