@@ -12,7 +12,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum Notes(button1, button2, button3, silent)Note;
+enum Notes(button1, button2, button3, silent, init)Note;
 
 unsigned char A0;
 unsigned char A1;
@@ -20,7 +20,33 @@ unsigned char A2;
 
 Tick_Note(){
 	switch(Note){
-		case
+		case silent:
+			PWM_off();
+			if(!A0 && !A1 && !A2){
+				Note = silent;
+			}
+			else if( A0 && !A1 && !A2){
+				Note = button1;
+				PWM_on();
+			}
+			else if( !A0 && A1 && !A2){
+				Note = button2;
+				PWM_on();
+			}
+			else if( !A0 && !A1 && A2 ){
+				Note = button3;
+				PWM_on();
+			}
+			else if( (A0 + A1 + A2) > 1 ){
+				PWM_off();
+			        Note = silent;
+			}	       
+			break;
+		case button1:
+
+		default:
+			Note = silent;
+
 
 	}
 }
@@ -65,8 +91,8 @@ int main(void) {
     /* Insert your solution below */
     while (1) {
 	A0 = ~PINA & 0x01;
-	A1 = ~PINA & 0x02;
-	A2 = ~PINA & 0x04;
+	A1 = (~PINA & 0x02) >> 1;
+	A2 = (~PINA & 0x04) >> 2;
 	Tick_Note();
     }
     return 1;
