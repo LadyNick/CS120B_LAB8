@@ -20,6 +20,9 @@ unsigned char A2;
 
 Tick_Note(){
 	switch(Note){
+		case init:
+			Note = silent;
+			break;
 		case silent:
 			PWM_off();
 			if(!A0 && !A1 && !A2){
@@ -43,11 +46,77 @@ Tick_Note(){
 			}	       
 			break;
 		case button1:
-
+			set_PWM(261.63);
+			if(!A0 && !A1 && !A2){
+				PWM_off();
+				Note = silent;
+			}
+			else if( A0 && !A1 && !A2){
+				Note = button1;
+				PWM_on();
+			}
+			else if( !A0 && A1 && !A2){
+				Note = button2;
+				PWM_on();
+			}
+			else if( !A0 && !A1 && A2 ){
+				Note = button3;
+				PWM_on();
+			}
+			else if( (A0 + A1 + A2) > 1 ){
+				PWM_off();
+			        Note = silent;
+			}
+			break;
+		case button2:
+			set_PWM(293.66);
+			if(!A0 && !A1 && !A2){
+				PWM_off();
+				Note = silent;
+			}
+			else if( A0 && !A1 && !A2){
+				Note = button1;
+				PWM_on();
+			}
+			else if( !A0 && A1 && !A2){
+				Note = button2;
+				PWM_on();
+			}
+			else if( !A0 && !A1 && A2 ){
+				Note = button3;
+				PWM_on();
+			}
+			else if( (A0 + A1 + A2) > 1 ){
+				PWM_off();
+			        Note = silent;
+			}
+			break;
+		case button3:
+			set_PWM(329.63);
+			if(!A0 && !A1 && !A2){
+				PWM_off();
+				Note = silent;
+			}
+			else if( A0 && !A1 && !A2){
+				Note = button1;
+				PWM_on();
+			}
+			else if( !A0 && A1 && !A2){
+				Note = button2;
+				PWM_on();
+			}
+			else if( !A0 && !A1 && A2 ){
+				Note = button3;
+				PWM_on();
+			}
+			else if( (A0 + A1 + A2) > 1 ){
+				PWM_off();
+			        Note = silent;
+			}
+			break;
 		default:
 			Note = silent;
-
-
+			break;
 	}
 }
 
@@ -87,8 +156,10 @@ int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0X00; PINA = 0XFF;
 	DDRB = 0X40; PORTB = 0x00;
-
+	
     /* Insert your solution below */
+	Note = init;
+	
     while (1) {
 	A0 = ~PINA & 0x01;
 	A1 = (~PINA & 0x02) >> 1;
