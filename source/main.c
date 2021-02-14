@@ -50,6 +50,7 @@ unsigned char A0;
 unsigned char A1;
 unsigned char A2;
 unsigned char count = 0;
+unsigned char offr = 0;
 
 void Tick_Note(){
 	switch(Note_state){
@@ -59,10 +60,13 @@ void Tick_Note(){
 		break;
 	case off:
 		PWM_off();
-		if(A0){
+		count = 1;
+		if(A0 && (offr > 1)){
+			offr = 0;
 			Note_state = on;
 		}
 		else{
+			++offr;
 			Note_state = off;
 		break;
 	case on:
@@ -70,11 +74,11 @@ void Tick_Note(){
 		set_PWM(261.63);
 		count = 1;
 		if(!A0){
-			Note_state = off;
-		}
-		else{
 			Note_state = change;
 		}
+		else{
+			Note_state = on;
+		}	
 		break;
 	case change:
 		if(count == 1){
@@ -124,6 +128,37 @@ void Tick_Note(){
 		}
 		}
 		break;
+	case release:
+		if(count == 1){
+			set_PWM(261.63);
+		}
+		if(count == 2){
+			set_PWM(293.66);
+		}
+		if(count == 3){
+			set_PWM(329.63);
+		}
+		if(count == 4){
+			set_PWM(349.23);
+		}
+		if(count == 5){
+			set_PWM(392.00);
+		}
+		if(count == 6){
+			set_PWM(440.00);
+		}
+		if(count == 7){
+			set_PWM(493.88);
+		}
+		if(count == 8){
+			set_PWM(523.25);
+		}
+		if(!A1 && !A2){
+			Note_state = change;
+		}
+		else{
+			Note_state = release;
+		}
 	case default:
 		Note_state = init;
 		break;
